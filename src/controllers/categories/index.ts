@@ -1,12 +1,21 @@
-import CategoryModel from "../../models/categories/index.js"
+import { Request, Response } from "express"
+import CategoryModel from "../../models/categories/index"
+import { CustomError } from "../../utils/errors/custom.error";
 
+const handlerError = (error: unknown, res: Response) => {
+  if (error instanceof CustomError) {
+    return res.status(error.statusCode).json({ error: error.message });
+  }
+  console.log(error);
+  return res.status(500).json({ error: "Internal Server Error" });
+};
 
 const CategoriesControllers = {
-  getAllCategories: async (req, res) => {
+  getAllCategories: async (req:Request, res:Response) => {
     try {
-      if (req.query.name) 
+      const name: string = req.query.name as string
+      if (name) 
       {
-        const name = req.query.name
         const categoryByName = await CategoryModel.getCategoryByName(name)
         res.send(categoryByName)
       }
@@ -16,10 +25,10 @@ const CategoriesControllers = {
         return; 
       }
     } catch (error) {
-      throw error
+      handlerError(error, res)
     }
   },
-  getCategoryById: async (req, res) => {
+  getCategoryById: async (req:Request, res:Response) => {
     try {
       if (!req.params.id) throw new Error("No id provided")
       const category = await CategoryModel.getCategoryById(req.params.id)
@@ -28,7 +37,7 @@ const CategoriesControllers = {
       throw error
     }
   },
-  createCategory: async (req, res) => {
+  createCategory: async (req:Request, res:Response) => {
     try {
       const category = await CategoryModel.createCategory(req.body.name)
       res.send(category)
@@ -36,7 +45,7 @@ const CategoriesControllers = {
       throw error
     }
   },
-  updateCategory: async (req, res) => {
+  updateCategory: async (req:Request, res:Response) => {
     try {
       const category = await CategoryModel.updateCategory(req.params.id, req.body.name)
       res.send(category)
@@ -44,7 +53,7 @@ const CategoriesControllers = {
       throw error
     }
   },
-  deleteCategory: async (req, res) => {
+  deleteCategory: async (req:Request, res:Response) => {
     try {
       const category = await CategoryModel.deleteCategory(req.params.id)
       res.send(category)

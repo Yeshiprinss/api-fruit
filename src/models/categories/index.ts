@@ -1,4 +1,4 @@
-import connectionPool from "../../data/db.js"
+import connectionPool from "../../data/db"
 import { v4 as uuidv4 } from 'uuid';
 
 const CategoryModel = {
@@ -11,7 +11,7 @@ const CategoryModel = {
       throw error
     }
   },
-  getCategoryById: async (id) => {
+  getCategoryById: async (id: string) => {
     try {
       if(!id) throw new Error("No id provided")
       const sql = 'SELECT * FROM categories WHERE categories_status = ? AND categories_id= ?';
@@ -23,7 +23,7 @@ const CategoryModel = {
       throw error
     }
   },
-  getCategoryByName: async (name) => {
+  getCategoryByName: async (name: string) => {
     try {
       const sql = 'SELECT * FROM categories WHERE categories_status = ? AND categories_name like ?';
       const params = [1, `%${name}%`];
@@ -34,7 +34,7 @@ const CategoryModel = {
       throw error
     }
   },
-  createCategory: async (name) => {
+  createCategory: async (name: string) => {
     try {
       const newId = uuidv4();
       if(!name) throw new Error("Name is required")
@@ -44,7 +44,7 @@ const CategoryModel = {
       throw error
     }
   },
-  updateCategory: async (id, name) => {
+  updateCategory: async (id:string, name: string) => {
     try {
       const [result] = await connectionPool.query(`UPDATE categories SET categories_name = '${name}' WHERE categories_id = '${id}'`);
       return result
@@ -52,7 +52,7 @@ const CategoryModel = {
       throw error
     }
   },
-  deleteCategory: async (id) => {
+  deleteCategory: async (id: string) => {
     try {
       const [result] = await connectionPool.query(`UPDATE categories SET categories_status = 0 WHERE categories_id = '${id}'`);
       return result

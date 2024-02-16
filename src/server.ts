@@ -1,7 +1,7 @@
 import express from "express";
-import cors from "cors";
+import cors from 'cors';
 
-import routeCategories from "./v1/routes/categories/index.js";
+import routeCategories from "./v1/routes/categories/index";
 import morgan from "morgan";
 
 const server = express();
