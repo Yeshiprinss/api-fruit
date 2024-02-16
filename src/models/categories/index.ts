@@ -1,5 +1,6 @@
 import connectionPool from "../../data/db"
 import { v4 as uuidv4 } from 'uuid';
+import { CustomError } from "../../utils/errors/custom.error";
 
 const CategoryModel = {
 
@@ -13,11 +14,9 @@ const CategoryModel = {
   },
   getCategoryById: async (id: string) => {
     try {
-      if(!id) throw new Error("No id provided")
       const sql = 'SELECT * FROM categories WHERE categories_status = ? AND categories_id= ?';
       const params = [1, id];
       const [result] = await connectionPool.query(sql, params);
-      console.log(result)
       return result
     } catch (error) {
       throw error
@@ -28,7 +27,6 @@ const CategoryModel = {
       const sql = 'SELECT * FROM categories WHERE categories_status = ? AND categories_name like ?';
       const params = [1, `%${name}%`];
       const [result] = await connectionPool.query(sql, params);
-  
       return result
     } catch (error) {
       throw error
@@ -37,7 +35,6 @@ const CategoryModel = {
   createCategory: async (name: string) => {
     try {
       const newId = uuidv4();
-      if(!name) throw new Error("Name is required")
       const [result] = await connectionPool.query(`INSERT INTO categories (categories_id,categories_name) VALUES ('${newId}','${name}')`);
       return result
     } catch (error) {
