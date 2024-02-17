@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
-import CategoryModel from "../../models/categories/index"
-import { CustomError } from "../../utils/errors/custom.error";
+import CategoryModel from "../models/categoryModel"
+import { CustomError } from "../utils/errors/custom.error";
 
 const handlerError = (error: unknown, res: Response) => {
   if (error instanceof CustomError) {
@@ -15,12 +15,12 @@ const CategoriesControllers = {
       const name: string = req.query.name as string
       if (!name) {
         const allCategories = await CategoryModel.getAllCategory()
-        return res.send(allCategories); 
+        return res.send({data: allCategories}); 
       }
       else{
         const categoryByName = await CategoryModel.getCategoryByName(name)
         if (!categoryByName) throw CustomError.badRequest("No category found")
-        return res.send(categoryByName)
+        return res.json({data: categoryByName})
       }
     } catch (error) {
       handlerError(error, res)
@@ -30,7 +30,7 @@ const CategoriesControllers = {
     try {
       if (!req.params.id) throw CustomError.badRequest("No id provided")
       const category = await CategoryModel.getCategoryById(req.params.id)
-      return res.send(category)
+      return res.json({data: category})
     } catch (error) {
       handlerError(error, res)
     }

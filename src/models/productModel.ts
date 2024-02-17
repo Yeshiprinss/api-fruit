@@ -1,10 +1,9 @@
-import connectionPool from "../../data/db"
+import connectionPool from "../data/db"
 import { v4 as uuidv4 } from 'uuid';
-import { CustomError } from "../../utils/errors/custom.error";
 
-const CategoryModel = {
+const ProductModel = {
 
-  getAllCategory: async () => {
+  getAllProducts: async () => {
     try {
       const [result] = await connectionPool.query("SELECT * FROM categories where categories_status = 1")
       return result
@@ -12,7 +11,7 @@ const CategoryModel = {
       throw error
     }
   },
-  getCategoryById: async (id: string) => {
+  getProductById: async (id: string) => {
     try {
       const sql = 'SELECT * FROM categories WHERE categories_status = ? AND categories_id= ?';
       const params = [1, id];
@@ -22,7 +21,7 @@ const CategoryModel = {
       throw error
     }
   },
-  getCategoryByName: async (name: string) => {
+  getProductByName: async (name: string) => {
     try {
       const sql = 'SELECT * FROM categories WHERE categories_status = ? AND categories_name like ?';
       const params = [1, `%${name}%`];
@@ -32,7 +31,7 @@ const CategoryModel = {
       throw error
     }
   },
-  createCategory: async (name: string) => {
+  createProduct: async (name: string) => {
     try {
       const newId = uuidv4();
       const [result] = await connectionPool.query(`INSERT INTO categories (categories_id,categories_name) VALUES ('${newId}','${name}')`);
@@ -41,7 +40,7 @@ const CategoryModel = {
       throw error
     }
   },
-  updateCategory: async (id:string, name: string) => {
+  updateProduct: async (id:string, name: string) => {
     try {
       const [result] = await connectionPool.query(`UPDATE categories SET categories_name = '${name}' WHERE categories_id = '${id}'`);
       return result
@@ -49,7 +48,7 @@ const CategoryModel = {
       throw error
     }
   },
-  deleteCategory: async (id: string) => {
+  deleteProduct: async (id: string) => {
     try {
       const [result] = await connectionPool.query(`UPDATE categories SET categories_status = 0 WHERE categories_id = '${id}'`);
       return result
@@ -59,4 +58,4 @@ const CategoryModel = {
   },
 }
 
-export default CategoryModel;
+export default ProductModel;
