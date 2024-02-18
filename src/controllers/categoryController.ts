@@ -37,7 +37,7 @@ const CategoriesControllers = {
   },
   createCategory: async (req:Request, res:Response) => {
     try {
-      if (!req.params.name) throw CustomError.badRequest("No name provided")
+      if (!req.body.name) throw CustomError.badRequest("No name provided")
       const category = await CategoryModel.createCategory(req.body.name)
       res.send(category)
     } catch (error) {
