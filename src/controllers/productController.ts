@@ -18,6 +18,8 @@ const ProductsControllers = {
       const name: string = req.query.name as string
       if (!name) {
         const allProducts = await ProductModel.getAllProducts()
+        const counProduct = Array.isArray(allProducts) ? allProducts.length : 0
+        if (counProduct === 0) throw CustomError.notFound('No hay registros')
         return res.send({result:allProducts}); 
       }
       else{

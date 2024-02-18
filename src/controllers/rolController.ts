@@ -49,7 +49,7 @@ const RolesControllers = {
   },
   updateRol: async (req:Request, res:Response) => {
     try {
-      if (!req.params.name) throw CustomError.badRequest("No name provided")
+      if (!req.body.name) throw CustomError.badRequest("No name provided")
       const rol = await RolModel.updateRol(req.params.id, req.body.name)
       res.send(rol)
     } catch (error) {
