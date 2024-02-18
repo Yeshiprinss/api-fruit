@@ -15,11 +15,14 @@ const CategoriesControllers = {
       const name: string = req.query.name as string
       if (!name) {
         const allCategories = await CategoryModel.getAllCategory()
+        const countCategories = Array.isArray(allCategories) ? allCategories.length : 0
+        if (countCategories === 0) throw CustomError.notFound('No hay registros')
         return res.send({data: allCategories}); 
       }
       else{
         const categoryByName = await CategoryModel.getCategoryByName(name)
-        if (!categoryByName) throw CustomError.badRequest("No category found")
+        const countCategories = Array.isArray(categoryByName) ? categoryByName.length : 0
+        if (countCategories === 0) throw CustomError.notFound('No hay registros')
         return res.json({data: categoryByName})
       }
     } catch (error) {

@@ -2,7 +2,6 @@ import connectionPool from "../data/db"
 import { v4 as uuidv4 } from 'uuid';
 import { CustomError } from "../utils/errors/custom.error";
 import { ValidateName } from "../utils/config";
-import { isNull } from "util";
 
 const CategoryModel = {
 

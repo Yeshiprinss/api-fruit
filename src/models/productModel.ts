@@ -1,5 +1,7 @@
 import connectionPool from "../data/db"
 import { v4 as uuidv4 } from 'uuid';
+import { ValidateName } from "../utils/config";
+import { CustomError } from "../utils/errors/custom.error";
 
 const ProductModel = {
 
@@ -33,6 +35,9 @@ const ProductModel = {
   },
   createProduct: async (name: string, description:string, image: string, subCategory: string, stock: number, measurement: string, salesPrice: number, purchasePrice: number) => {
     try {
+      const find = await ValidateName(name,'product_name', 'products');
+      if (find > 0)  throw CustomError.badRequest('El nombre del producto ya existe');
+
       const newId = uuidv4();
       const sqlInsert ='INSERT INTO products(product_id, product_name, product_description, product_image, sub_category_id, product_stock, um_id, product_sales_price, product_purchase_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
       const params = [newId, name, description, image, subCategory, stock, measurement, salesPrice, purchasePrice];
@@ -44,7 +49,8 @@ const ProductModel = {
   },
   updateProduct: async (id:string, name: string, description:string, image: string, subCategory: string, stock: number, measurement: string, salesPrice: number, purchasePrice: number) => {
     try {
-      const [result] = await connectionPool.query(`UPDATE products SET product_name = '${name}' product_description='${description}', product_image='${image}', sub_category_id='${subCategory}', product_stock=${stock}, um_id='${measurement}', product_sales_price=${salesPrice}, product_purchase_price=${purchasePrice} WHERE product_id = '${id}'`);
+      const [result] = await connectionPool.query(`UPDATE products SET product_name = '${name}', product_description='${description}', product_image='${image}', sub_category_id='${subCategory}', product_stock=${stock}, um_id='${measurement}', product_sales_price=${salesPrice}, product_purchase_price=${purchasePrice} WHERE product_id = '${id}'`);
+      console.log(result)
       return result
     } catch (error) {
       throw error
