@@ -1,7 +1,8 @@
 import connectionPool from "../data/db"
 import { v4 as uuidv4 } from 'uuid';
 import { CustomError } from "../utils/errors/custom.error";
-import { ValidateName } from "../utils/config";
+import { BcryptAdapter, ValidateName } from "../utils/config";
+import { User } from "../interfaces/user.interface";
 
 const UserModel = {
 
@@ -33,21 +34,24 @@ const UserModel = {
       throw error
     }
   },
-  createUser: async (email: string, password:string, name: string, lastName:string, phone:string, rolId: string) => {
+  createUser: async ({email, password, name, lastName, phone, isAdmin}: User) => {
     try {
       const find = await ValidateName(email,'user_email', 'Users');
       if (find > 0)  throw CustomError.badRequest('El email del user ya existe');
       
       const newId = uuidv4();
-      const [rows] = await connectionPool.query(`INSERT INTO Users (user_id, user_email, user_password, user_name, user_lastname, user_phone, rol_id) VALUES ('${newId}', '${email}', '${password}', '${name}', '${lastName}', '${phone}', '${rolId}')`);
+      const passwordHash = BcryptAdapter.hash(password);
+      isAdmin = 0
+      console.log(password, passwordHash);
+      const [rows] = await connectionPool.query(`INSERT INTO Users (user_id, user_email, user_password, user_name, user_lastname, user_phone, user_is_admin) VALUES ('${newId}', '${email}', '${passwordHash}', '${name}', '${lastName}', '${phone}', ${isAdmin})`);
       return rows
     } catch (error) {
       throw error
     }
   },
-  updateUser: async (id:string, email: string, password:string, name: string, lastName:string, phone:string, rolId: string) => {
+  updateUser: async (id:string, {email, password, name, lastName, phone, isAdmin}: User) => {
     try {
-      const [rows] = await connectionPool.query(`UPDATE Users SET user_name = '${name}' , user_email = '${email}' , user_password = '${password}' , user_lastname = '${lastName}' , user_phone = '${phone}' , rol_id = '${rolId}'  WHERE user_id = '${id}'`);
+      const [rows] = await connectionPool.query(`UPDATE Users SET user_name = '${name}' , user_email = '${email}' , user_password = '${password}' , user_lastname = '${lastName}' , user_phone = '${phone}' , user_is_admin = ${isAdmin} WHERE user_id = '${id}'`);
       return rows
     } catch (error) {
       throw error

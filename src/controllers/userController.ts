@@ -42,20 +42,17 @@ const UsersControllers = {
   createUser: async (req:Request, res:Response) => {
     try {
 
-      const { email, password, name, lastName, phone, rolId} = req.body
+      const { email, password, name, lastName, phone, isAdmin} = req.body
 
       if (!email) throw CustomError.badRequest("No email provided")
       if(!Validators.email.test(email)) throw CustomError.badRequest("Email is not valid")
       if (!password) throw CustomError.badRequest("No password provided")
       if (!name) throw CustomError.badRequest("No name provided")
-      if (!lastName) throw CustomError.badRequest("No lastName provided")
-      if (!phone) throw CustomError.badRequest("No phone provided")
-      if (!rolId) throw CustomError.badRequest("No rolId provided")
       
       if (password.length < 6) throw CustomError.badRequest("Password must have at least 6 characters")
       if (password.length > 20) throw CustomError.badRequest("Password must have at most 20 characters")
 
-      const user = await UserModel.createUser( email, password, name, lastName, phone, rolId )
+      const user = await UserModel.createUser( {email, password, name, lastName, phone, isAdmin })
       res.send(user)
     } catch (error) {
       handlerError(error, res)
@@ -63,21 +60,18 @@ const UsersControllers = {
   },
   updateUser: async (req:Request, res:Response) => {
     try {
-      const { email, password, name, lastName, phone, rolId } = req.body
+      const { email, password, name, lastName, phone, isAdmin } = req.body
 
       if (!req.params.id) throw CustomError.badRequest("No id provided")
       if (!email) throw CustomError.badRequest("No email provided")
       if(!Validators.email.test(email)) throw CustomError.badRequest("Email is not valid")
       if (!password) throw CustomError.badRequest("No password provided")
       if (!name) throw CustomError.badRequest("No name provided")
-      if (!lastName) throw CustomError.badRequest("No lastName provided")
-      if (!phone) throw CustomError.badRequest("No phone provided")
-      if (!rolId) throw CustomError.badRequest("No rolId provided")
 
       if (password.length < 6) throw CustomError.badRequest("Password must have at least 6 characters")
       if (password.length > 20) throw CustomError.badRequest("Password must have at most 20 characters")
      
-      const user = await UserModel.updateUser( req.params.id, email, password, name, lastName, phone, rolId )
+      const user = await UserModel.updateUser( req.params.id, {email, password, name, lastName, phone, isAdmin })
       res.send(user)
     
     } catch (error) {
