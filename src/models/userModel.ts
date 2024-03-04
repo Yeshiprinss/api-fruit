@@ -45,11 +45,11 @@ const UserModel = {
       const find = await ValidateName(email,'user_email', 'Users');
       if (find > 0)  throw CustomError.badRequest('El email del user ya existe');
       
-      const newId = uuidv4();
+      // const newId = uuidv4();
       const passwordHash = BcryptAdapter.hash(password);
       isAdmin = 0
       // console.log(password, passwordHash);
-      const [rows] = await connectionPool.query(`INSERT INTO Users (user_id, user_email, user_password, user_name, user_lastname, user_phone, user_is_admin) VALUES ('${newId}', '${email}', '${passwordHash}', '${name}', '${lastName}', '${phone}', ${isAdmin})`);
+      const [rows] = await connectionPool.query(`INSERT INTO Users ( user_email, user_password, user_name, user_lastname, user_phone, user_is_admin) VALUES ( '${email}', '${passwordHash}', '${name}', '${lastName}', '${phone}', ${isAdmin})`);
       return rows
     } catch (error) {
       throw error

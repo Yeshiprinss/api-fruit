@@ -38,9 +38,9 @@ const ProductModel = {
       const find = await ValidateName(name,'product_name', 'products');
       if (find > 0)  throw CustomError.badRequest('El nombre del producto ya existe');
 
-      const newId = uuidv4();
-      const sqlInsert ='INSERT INTO products(product_id, product_name, product_description, product_image, sub_category_id, product_stock, um_id, product_sales_price, product_purchase_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
-      const params = [newId, name, description, image, subCategory, stock, measurement, salesPrice, purchasePrice];
+      // const newId = uuidv4();
+      const sqlInsert ='INSERT INTO products( product_name, product_description, product_image, sub_category_id, product_stock, um_id, product_sales_price, product_purchase_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
+      const params = [ name, description, image, subCategory, stock, measurement, salesPrice, purchasePrice];
       const [result] = await connectionPool.query(sqlInsert, params);
       return result
     } catch (error) {
