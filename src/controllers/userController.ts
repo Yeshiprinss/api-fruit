@@ -68,6 +68,8 @@ const UsersControllers = {
       if (!name) throw CustomError.badRequest("No name provided")
 
       // if (password.length < 6) throw CustomError.badRequest("Password must have at least 6 characters")
+
+      //TODO: HACER BUCLE PARA UPDATE Y CREAR FUNCION CAMPO: VALOR
      
       const user = await UserModel.updateUser( req.params.id, { email, password, name, lastName, phone, isAdmin})
       res.send(user)
