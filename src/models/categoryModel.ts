@@ -38,8 +38,8 @@ const CategoryModel = {
       const find = await ValidateName(name,'categories_name', 'categories');
       if (find > 0)  throw CustomError.badRequest('El nombre de la categoria ya existe');
       
-      const newId = uuidv4();
-      const [rows] = await connectionPool.query(`INSERT INTO categories (categories_id,categories_name) VALUES ('${newId}','${name}')`);
+      // const newId = uuidv4();
+      const [rows] = await connectionPool.query(`INSERT INTO categories (categories_name) VALUES ('${name}')`);
       return rows
     } catch (error) {
       throw error
